@@ -1,16 +1,8 @@
-// Standard error interface for API responses
-export interface ApiError {
-  code: string;
-  message: string;
-  details?: any;
-}
-
 // Error codes enum for consistency
 export enum ErrorCode {
   VALIDATION_ERROR = 'VALIDATION_ERROR',
   NOT_FOUND = 'NOT_FOUND',
   DATABASE_ERROR = 'DATABASE_ERROR',
-  CALCULATION_ERROR = 'CALCULATION_ERROR',
   INTERNAL_ERROR = 'INTERNAL_ERROR'
 }
 
@@ -25,14 +17,6 @@ export class AppError extends Error {
     this.code = code;
     this.details = details;
     this.name = 'AppError';
-  }
-
-  toApiError(): ApiError {
-    return {
-      code: this.code,
-      message: this.message,
-      details: this.details
-    };
   }
 }
 
@@ -54,12 +38,5 @@ export class DatabaseError extends AppError {
   constructor(message: string = 'Database operation failed', details?: any) {
     super(message, 500, ErrorCode.DATABASE_ERROR, details);
     this.name = 'DatabaseError';
-  }
-}
-
-export class CalculationError extends AppError {
-  constructor(message: string = 'Calculation failed', details?: any) {
-    super(message, 400, ErrorCode.CALCULATION_ERROR, details);
-    this.name = 'CalculationError';
   }
 }

@@ -26,8 +26,7 @@ app.get('/health', (_req, res) => {
   });
 });
 
-// Error handling middleware (must be last)
-app.use(errorHandler);
+
 
 // Handle 404 errors
 app.use('*', (req, res) => {
@@ -37,6 +36,9 @@ app.use('*', (req, res) => {
     method: req.method
   });
 });
+
+// Error handling middleware (must be last)
+app.use(errorHandler);
 
 app.listen(config.port, () => {
   console.log(`🚀 ${config.app.name} v${config.app.version}`);
