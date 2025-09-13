@@ -1,33 +1,54 @@
 <template>
   <div class="card">
-    <h2 class="text-lg font-semibold mb-6">Saved Quotes</h2>
-    
+    <div class="flex justify-between items-center">
+      <h2 class="text-lg font-semibold mb-6">Saved Quotes</h2>
+      <button
+        class="mb-6 btn-primary"
+        @click="$emit('viewComparisonModal', selectedQuotes)"
+      >
+        Compare Quotes
+      </button>
+    </div>
     <div v-if="quotes.length === 0" class="text-center py-10 text-gray-400">
       No saved quotes yet
     </div>
 
     <div v-else class="space-y-4">
-      <div 
-        v-for="quote in quotes" 
-        :key="quote.id" 
+      <div
+        v-for="quote in quotes"
+        :key="quote.id"
         class="flex justify-between items-center py-3 border-b border-gray-200 last:border-0"
       >
         <div>
-          <h3 class="font-semibold text-base">{{ quote.name || 'Unnamed Quote' }}</h3>
+          <h3 class="font-semibold text-base">
+            {{ quote.name || "Unnamed Quote" }}
+          </h3>
           <div class="flex gap-4 mt-1">
-            <span class="text-sm">Payment: <strong>${{ formatNumber(quote.monthlyPayment) }}</strong></span>
-            <span class="text-sm">Out of Pocket: <strong>${{ formatNumber(quote.downPayment) }}</strong></span>
+            <span class="text-sm"
+              >Payment:
+              <strong>${{ formatNumber(quote.monthlyPayment) }}</strong></span
+            >
+            <span class="text-sm"
+              >Out of Pocket:
+              <strong>${{ formatNumber(quote.downPayment) }}</strong></span
+            >
           </div>
         </div>
         <div class="flex gap-2">
-          <button 
-            @click="$emit('viewModal', quote)" 
+          <input
+            type="checkbox"
+            :checked="isSelected(quote)"
+            @change="() => toggleSelection(quote)"
+          />
+
+          <button
+            @click="$emit('viewModal', quote)"
             class="btn-primary text-xs py-1.5 px-4"
           >
             View
           </button>
-          <button 
-            @click="$emit('delete', quote.id)" 
+          <button
+            @click="$emit('delete', quote.id)"
             class="btn-danger text-xs py-1.5"
           >
             Delete
@@ -39,16 +60,20 @@
 </template>
 
 <script setup lang="ts">
-import type { Quote } from '../types/quote';
-import { useFormatters } from '../composables/useFormatters';
+import type { Quote } from "../types/quote";
+import { useFormatters } from "../composables/useFormatters";
 
 defineProps<{
-  quotes: Quote[]
+  quotes: Quote[];
+  isSelected: (quote: Quote) => boolean;
+  toggleSelection: (quote: Quote) => void;
+  selectedQuotes: Quote[];
 }>();
 
 defineEmits<{
-  viewModal: [quote: Quote]
-  delete: [id: string]
+  viewModal: [quote: Quote];
+  delete: [id: string];
+  viewComparisonModal: [selectedQuotes: Quote[]];
 }>();
 
 const { formatNumber } = useFormatters();

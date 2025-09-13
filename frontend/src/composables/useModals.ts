@@ -6,6 +6,11 @@ export const useModals = () => {
     isOpen: false,
     quote: null as Quote | null
   });
+  const comparisonModal = ref({
+    isOpen: false,
+    selectedQuotes: [] as Quote[]
+
+  });
 
   const confirmModal = ref({
     isOpen: false,
@@ -14,6 +19,11 @@ export const useModals = () => {
     pendingId: null as string | null
   });
 
+  const openComparisonModal = (selectedQuotes: Quote[]) => {
+   
+    comparisonModal.value = {isOpen: true, selectedQuotes}
+  };
+
   const openQuoteModal = (quote: Quote) => {
     quoteModal.value = { isOpen: true, quote };
   };
@@ -21,6 +31,7 @@ export const useModals = () => {
   const closeQuoteModal = () => {
     quoteModal.value = { isOpen: false, quote: null };
   };
+  
 
   const openConfirmModal = (title: string, message: string, id: string) => {
     confirmModal.value = {
@@ -40,12 +51,19 @@ export const useModals = () => {
     };
   };
 
+  const closeComparisonModal = () => {
+    comparisonModal.value = { isOpen: false, selectedQuotes: [] };
+  };
+
   return {
     quoteModal,
+    comparisonModal,
     confirmModal,
     openQuoteModal,
+    openComparisonModal,
     closeQuoteModal,
     openConfirmModal,
-    closeConfirmModal
+    closeConfirmModal,
+    closeComparisonModal
   };
 };

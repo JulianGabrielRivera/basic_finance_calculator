@@ -15,12 +15,15 @@
           <QuoteForm @calculate="handleCalculate" />
         </div>
         <div>
-          <QuoteResult 
-            v-if="currentQuote" 
-            :result="currentQuote" 
+          <QuoteResult
+            v-if="currentQuote"
+            :result="currentQuote"
             @save="handleSaveQuote"
           />
-          <div v-else class="bg-white rounded-lg border border-gray-300 p-6 h-full flex items-center justify-center">
+          <div
+            v-else
+            class="bg-white rounded-lg border border-gray-300 p-6 h-full flex items-center justify-center"
+          >
             <p class="text-gray-400 text-center">
               Enter quote details and click Apply to see results
             </p>
@@ -29,41 +32,52 @@
       </div>
 
       <div>
-        <SavedQuotes 
-          :quotes="savedQuotes" 
+        <SavedQuotes
+          :quotes="savedQuotes"
           @viewModal="handleViewModal"
+          @viewComparisonModal="handleComparisonViewModal"
           @delete="handleDeleteQuote"
+          :isSelected="isSelected"
+          :toggleSelection="toggleSelection"
+          :selectedQuotes="selectedQuotes"
         />
       </div>
     </main>
 
-    <QuoteModal 
-      :isOpen="quoteModal.isOpen" 
-      :quote="quoteModal.quote" 
+    <QuoteModal
+      :isOpen="quoteModal.isOpen"
+      :quote="quoteModal.quote"
       @close="handleCloseModal"
       @delete="handleModalDelete"
     />
 
-    <ConfirmModal 
+    <ConfirmModal
       :isOpen="confirmModal.isOpen"
       :title="confirmModal.title"
       :message="confirmModal.message"
       @confirm="handleConfirmDelete"
       @cancel="handleCancelDelete"
     />
-    
+    <ComparisonModal
+      :isOpen="comparisonModal.isOpen"
+      :selectedQuotes="comparisonModal.selectedQuotes"
+      @close="closeComparisonModal"
+    />
+
     <ToastContainer />
   </div>
 </template>
 
 <script setup lang="ts">
-import QuoteForm from './components/QuoteForm.vue';
-import QuoteResult from './components/QuoteResult.vue';
-import SavedQuotes from './components/SavedQuotes.vue';
-import QuoteModal from './components/QuoteModal.vue';
-import ConfirmModal from './components/ConfirmModal.vue';
-import ToastContainer from './components/ToastContainer.vue';
-import { useQuoteManager } from './composables/useQuoteManager';
+import QuoteForm from "./components/QuoteForm.vue";
+import QuoteResult from "./components/QuoteResult.vue";
+import SavedQuotes from "./components/SavedQuotes.vue";
+import QuoteModal from "./components/QuoteModal.vue";
+import ConfirmModal from "./components/ConfirmModal.vue";
+import ToastContainer from "./components/ToastContainer.vue";
+import ComparisonModal from "./components/ComparisonModal.vue";
+import { useQuoteManager } from "./composables/useQuoteManager";
+import { useQuoteComparison } from "./composables/useQuoteComparison";
 
 const {
   currentQuote,
@@ -78,6 +92,16 @@ const {
   handleModalDelete,
   handleDeleteQuote,
   handleConfirmDelete,
-  handleCancelDelete
+  handleCancelDelete,
 } = useQuoteManager();
+
+const {
+  handleComparison,
+  handleComparisonViewModal,
+  selectedQuotes,
+  comparisonModal,
+  isSelected,
+  toggleSelection,
+  closeComparisonModal,
+} = useQuoteComparison();
 </script>
